@@ -34,8 +34,12 @@ conda install -c conda-forge jupyterlab_templates
 jupyter labextension install jupyterlab_templates
 jupyter server extension enable --py jupyterlab_templates
 ```
+## Local Configuration
 
-## Adding templates
+The upstream copy of the library works by specifying paths on one's local machine to various libraries. This is
+what happens if you set `c.JupyterLabTemplates.local_files = True` in the config.
+
+### Adding templates
 install the server extension, and add the following to `jupyter_notebook_config.py`
 
 ```python3
@@ -46,7 +50,7 @@ c.JupyterLabTemplates.include_core_paths = True
 c.JupyterLabTemplates.template_label = "Template"
 ```
 
-## Templates for libraries
+### Templates for libraries
 The extension will search *subdirectories* of each parent directory specified in `template_dirs` for templates.
 **Note!** Templates in the parent directories will be ignored. You must put the templates in *subdirectories*, in order to keep everything organized.
 
@@ -61,6 +65,19 @@ All notebooks in this directory will be ignored (but has no effect on subdirecto
 - `include_default`: include the default Sample template (default True)
 - `include_core_paths`: include jupyter core paths (see: jupyter --paths) (default True)
 - `template_label`: set label for template UI icon (default "Template")
+
+## Remote Configuration
+
+This fork of the library offers the option to specify paths in Jupyterlab's contents_manager, which lets
+templates be stored in one or more remote locations. To enable this, specify  `c.JupyterLabTemplates.local_files = False`
+in the config.
+
+If you do this, `template_dirs` will represent a set of directories *as displayed in Jupyterlab*. This means
+that if you're using [S3Contents](https://github.com/cloudbutton/s3contents) or [HybridContents](https://github.com/viaduct-ai/hybridcontents),
+the paths may be stored in S3 or elsewhere.
+
+If this option is specified, you must also NOT set `include_default=True` or `include_core_paths=True`. If you
+do not specify these config options, they will be defaulted to False. These options are incompatible with `local_files=False`.
 
 
 ## Development
